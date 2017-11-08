@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
+            <group id="payxpert" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+                <label>PayXpert</label>
+                <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label"
+                       type="text">
+                    <label>Title</label>
+                </field>
+                <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="select">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="originator" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="40" translate="label" type="text">
+                    <label>Originator ID</label>
+                </field>
+                <field id="password" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="50" translate="label" type="text">
+                    <label>Password</label>
+                </field>
+                <field id="url" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="60" translate="label" type="text">
+                    <label>URL</label>
+                </field>
+                <field id="api_url" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="70" translate="label" type="text">
+                    <label>API URL</label>
+                </field>
+                <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="80" translate="label" type="text">
+                    <label>Sort Order</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
