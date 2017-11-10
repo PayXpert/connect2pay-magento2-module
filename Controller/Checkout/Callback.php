@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\App\Action\Action;
 use PayXpert\Connect2Pay\Connect2PayClient;
+use Magento\Framework\Controller\ResultFactory;
 
 class Callback extends Action
 {
@@ -42,6 +43,7 @@ class Callback extends Action
     protected $order;
     protected $invoiceSender;
     protected $logger;
+    protected $resultFactory;
 
     /**
      * Callback constructor.
@@ -75,6 +77,7 @@ class Callback extends Action
         $this->order = $order;
         $this->invoiceSender = $invoiceSender;
         $this->logger = $logger;
+        $this->resultFactory = $context->getResultFactory();
         parent::__construct($context);
     }
 
@@ -87,9 +90,9 @@ class Callback extends Action
 
 
         $c2pClient = new Connect2PayClient($this->payxpertModel->getUrl(), 
-  	    	$this->payxpertHelper->getConfig('payment/payxpert/originator'), 
-  	    	$this->payxpertHelper->getConfig('payment/payxpert/password')
-  	    );
+          $this->payxpertHelper->getConfig('payment/payxpert/originator'), 
+          $this->payxpertHelper->getConfig('payment/payxpert/password')
+        );
 
         if ($c2pClient->handleCallbackStatus()) {
 
@@ -152,10 +155,9 @@ class Callback extends Action
 
                     // Send back a response to mark this transaction as notified on the payment
                     // page
-                    $response = array("status" => "OK", "message" => "Status recorded");
-                    header("Content-type: application/json");
-                    echo json_encode($response);
-                    exit;
+                    $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+                    $result->setData(array("status" => "OK", "message" => "Status recorded"));
+                    return $result;
                   }
                 } else {
                   $this->logger->critical("Error. No order found for token " . $merchantToken . " in callback from " . $_SERVER["REMOTE_ADDR"] . ".");
