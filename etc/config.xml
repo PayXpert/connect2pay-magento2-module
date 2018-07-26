@@ -6,7 +6,7 @@
             <payxpert>
                 <title>Credit cards with PayXpert</title>
                 <active>1</active>
-                <model>PayXpert\Connect2Pay\Model\Payment\Payxpert</model>
+                <model>Payxpert\Connect2Pay\Model\Payment\Payxpert</model>
                 <order_status>pending</order_status>
                 <allowspecific>0</allowspecific>
             </payxpert>

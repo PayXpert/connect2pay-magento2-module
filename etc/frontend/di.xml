@@ -3,7 +3,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="payxpert_config_provider" xsi:type="object">PayXpert\Connect2Pay\Model\ConfigGateway</item>
+                <item name="payxpert_config_provider" xsi:type="object">Payxpert\Connect2Pay\Model\ConfigGateway</item>
             </argument>
         </arguments>
     </type>

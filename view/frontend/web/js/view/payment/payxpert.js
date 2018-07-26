@@ -9,7 +9,7 @@ define(
         rendererList.push(
             {
                 type: 'payxpert',
-                component: 'PayXpert_Connect2Pay/js/view/payment/method-renderer/payxpert-method'
+                component: 'Payxpert_Connect2Pay/js/view/payment/method-renderer/payxpert-method'
             }
         );
         return Component.extend({});

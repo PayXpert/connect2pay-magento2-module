@@ -15,7 +15,7 @@
    limitations under the License. 
  */
 
-namespace PayXpert\Connect2Pay\Helper;
+namespace Payxpert\Connect2Pay\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Backend\App\Action;

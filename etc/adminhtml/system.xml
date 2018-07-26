@@ -25,7 +25,11 @@
                 <field id="api_url" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="70" translate="label" type="text">
                     <label>API URL</label>
                 </field>
-                <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="80" translate="label" type="text">
+                <field id="iframe" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="80" translate="label" type="select">
+                    <label>Iframe mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="90" translate="label" type="text">
                     <label>Sort Order</label>
                 </field>
             </group>

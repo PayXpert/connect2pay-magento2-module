@@ -15,7 +15,7 @@
    limitations under the License. 
  */
 
-namespace PayXpert\Connect2Pay\Model\Payment;
+namespace Payxpert\Connect2Pay\Model\Payment;
 
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
@@ -31,7 +31,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Sales\Model\Order;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Escaper;
-use PayXpert\Connect2Pay\Helper\Data as PayxpertHelper;
+use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Data\Collection\AbstractDb;
 

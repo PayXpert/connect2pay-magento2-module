@@ -15,14 +15,14 @@
    limitations under the License. 
  */
 
-namespace PayXpert\Connect2Pay\Controller\Checkout;
+namespace Payxpert\Connect2Pay\Controller\Checkout;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Payment\Helper\Data as PaymentHelper;
-use PayXpert\Connect2Pay\Model\Payment\Payxpert as PayxpertModel;
-use PayXpert\Connect2Pay\Helper\Data as PayxpertHelper;
+use Payxpert\Connect2Pay\Model\Payment\Payxpert as PayxpertModel;
+use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Psr\Log\LoggerInterface;

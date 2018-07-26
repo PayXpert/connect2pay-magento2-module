@@ -15,7 +15,7 @@
    limitations under the License. 
  */
 
-namespace PayXpert\Connect2Pay\Controller\Redirect;
+namespace Payxpert\Connect2Pay\Controller\Redirect;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
@@ -72,7 +72,7 @@ class Payxpert extends \Magento\Framework\App\Action\Action
                 $methodInstance = $this->_paymentHelper->getMethodInstance($method);
             }
 
-            if ($methodInstance instanceof \PayXpert\Connect2Pay\Model\Payment\Payxpert) {
+            if ($methodInstance instanceof \Payxpert\Connect2Pay\Model\Payment\Payxpert) {
                 $storeId = $order->getStoreId();
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->_redirect($redirectUrl);

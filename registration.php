@@ -17,6 +17,6 @@
    
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'PayXpert_Connect2Pay',
+    'Payxpert_Connect2Pay',
     __DIR__
 );

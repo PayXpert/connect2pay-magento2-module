@@ -15,12 +15,12 @@
    limitations under the License. 
  */
 
-namespace PayXpert\Connect2Pay\Model;
+namespace Payxpert\Connect2Pay\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\ObjectManagerInterface;
 
-use PayXpert\Connect2Pay\Model\Payment\Payxpert;
+use Payxpert\Connect2Pay\Model\Payment\Payxpert;
 use Magento\Checkout\Model\ConfigProviderInterface;
 
 class ConfigGateway implements ConfigProviderInterface
@@ -49,11 +49,12 @@ class ConfigGateway implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $active = $this->_config->getValue('payment/payxpert/active');
+        $active       = $this->_config->getValue('payment/payxpert/active');
         $originatorId = $this->_config->getValue('payment/payxpert/originator');
-        $password = $this->_config->getValue('payment/payxpert/password');
-        $url = $this->_config->getValue('payment/payxpert/url');
-        $apiUrl = $this->_config->getValue('payment/payxpert/api_url');
+        $password     = $this->_config->getValue('payment/payxpert/password');
+        $url          = $this->_config->getValue('payment/payxpert/url');
+        $apiUrl       = $this->_config->getValue('payment/payxpert/api_url');
+        $iframe       = $this->_config->getValue('payment/payxpert/iframe');
 
         if (!$active) {
             return [];
@@ -66,7 +67,8 @@ class ConfigGateway implements ConfigProviderInterface
                     'originator'  => $originatorId,
                     'password'    => $password,
                     'url'         => $url,
-                    'apiUrl'      =>  $apiUrl
+                    'apiUrl'      => $apiUrl,
+                    'iframe'      => $iframe
                 ],
             ],
         ];
