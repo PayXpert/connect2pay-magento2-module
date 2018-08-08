@@ -7,6 +7,7 @@ The author of this plugin can NEVER be held responsible for this software.
 There is no warranty what so ever. You accept this by using this software.
 
 ## Changelog
+* 1.1.1 - PSR-4
 * 1.1.0 - Iframe support
 * 1.0.1 - Fixed callback response
 * 1.0.0 - Initial Release
@@ -28,7 +29,7 @@ There is no warranty what so ever. You accept this by using this software.
 3. Enter following commands to enable module:
 
    ```
-   php bin/magento module:enable PayXpert_Connect2Pay
+   php bin/magento module:enable Payxpert_Connect2Pay
    php bin/magento setup:upgrade
    php bin/magento cache:clean
    ```
@@ -48,7 +49,7 @@ Please visit the PayXpert website (http://www.payxpert.com) for our support cont
 
 ## Requirements
 
-1) For Magento® 2.1.x and Magento® 2.2.x
+1) For Magento® 2.2.x
 
 2) This extension requires [Connect2Pay PHP Client.](https://github.com/PayXpert/connect2pay-php-client)
 
