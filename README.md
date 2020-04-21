@@ -7,6 +7,7 @@ The author of this plugin can NEVER be held responsible for this software.
 There is no warranty what so ever. You accept this by using this software.
 
 ## Changelog
+* 1.1.2 - Removed PHP verison requirement
 * 1.1.1 - PSR-4
 * 1.1.0 - Iframe support
 * 1.0.1 - Fixed callback response
