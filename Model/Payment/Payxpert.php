@@ -133,10 +133,10 @@ class Payxpert extends AbstractMethod
 
       $c2pClient->setOrderID( $order->getId() );
       // $c2pClient->setCustomerIP( $fields['customerIP'] );
-      $c2pClient->setPaymentType( Connect2PayClient::_PAYMENT_TYPE_CREDITCARD );
-      $c2pClient->setPaymentMode( Connect2PayClient::_PAYMENT_MODE_SINGLE );
+      $c2pClient->setPaymentMethod( Connect2PayClient::PAYMENT_TYPE_CREDITCARD );
+      $c2pClient->setPaymentMode( Connect2PayClient::PAYMENT_MODE_SINGLE );
       $c2pClient->setShopperID( $order->getCustomerID() );
-      $c2pClient->setShippingType( Connect2PayClient::_SHIPPING_TYPE_VIRTUAL );
+      $c2pClient->setShippingType( Connect2PayClient::SHIPPING_TYPE_VIRTUAL );
       $c2pClient->setAmount( $order->getGrandTotal() * 100 );
       $c2pClient->setOrderDescription( "Order #" . $order->getId() );
       $c2pClient->setCurrency( $order->getOrderCurrency()->getCurrencyCode() );

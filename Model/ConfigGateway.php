@@ -22,6 +22,7 @@ use Magento\Framework\ObjectManagerInterface;
 
 use Payxpert\Connect2Pay\Model\Payment\Payxpert;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class ConfigGateway implements ConfigProviderInterface
 {
@@ -49,12 +50,12 @@ class ConfigGateway implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $active       = $this->_config->getValue('payment/payxpert/active');
-        $originatorId = $this->_config->getValue('payment/payxpert/originator');
-        $password     = $this->_config->getValue('payment/payxpert/password');
-        $url          = $this->_config->getValue('payment/payxpert/url');
-        $apiUrl       = $this->_config->getValue('payment/payxpert/api_url');
-        $iframe       = $this->_config->getValue('payment/payxpert/iframe');
+        $active       = $this->_config->getValue('payment/payxpert/active', ScopeInterface::SCOPE_STORE);
+        $originatorId = $this->_config->getValue('payment/payxpert/originator', ScopeInterface::SCOPE_STORE);
+        $password     = $this->_config->getValue('payment/payxpert/password', ScopeInterface::SCOPE_STORE);
+        $url          = $this->_config->getValue('payment/payxpert/url', ScopeInterface::SCOPE_STORE);
+        $apiUrl       = $this->_config->getValue('payment/payxpert/api_url', ScopeInterface::SCOPE_STORE);
+        $iframe       = $this->_config->getValue('payment/payxpert/iframe', ScopeInterface::SCOPE_STORE);
 
         if (!$active) {
             return [];
