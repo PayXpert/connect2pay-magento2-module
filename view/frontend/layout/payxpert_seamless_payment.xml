@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+      <css src="css/iframe.css" />
+      <link src="Payxpert_Connect2Pay::js/iframe/redirection_handler.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Payxpert\Connect2Pay\Block\Seamless" name="payxpert_seamless" template="seamless_payment.phtml" cacheable="false">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

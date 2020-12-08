@@ -1,0 +1,14 @@
+<div id="payment-container">
+    <div id="payment-form-container">
+        <script type="application/json">
+            {
+                "payButtonText": "Pay €10.99 now!",
+                "language": "en",
+                "fontFamily": "Helvetica",
+                "ctrlCallbackURL": "http://payxpert.tk/payxpert/checkout/callback/"
+            }
+        </script>
+    </div>
+</div>
+
+<script async="true" src="https://connect2.payxpert.com/payment/<?php echo $block->getCustomerTokenForBlock(); ?>/connect2pay-seamless-v1.2.1.js" data-mount-in="#payment-container" integrity="sha384-KoRUPIW3yZfYzkFzrA1D2/qUKXpnNoiyflE7W0V4kDhJtuQJn8BbwkqrzRPdsXx3" crossorigin="anonymous"></script>

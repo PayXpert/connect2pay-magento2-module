@@ -7,6 +7,16 @@
         <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
     </div>
     <div class="payment-method-content">
+        <h3><span>Payxoert Payment Methods</span></h3><br />
+        <div><label data-bind="visible: true"><input type="radio" value="creditCard" data-bind="checked: isChecked, enable: true, visible: true" />CreditCard</label></div>
+        <div><label data-bind="visible: toditoCash()"><input type="radio" value="toditoCash" data-bind="checked: isChecked, enable: toditoCash(), visible: toditoCash()" />toditoCash</label></div>
+        <div><label data-bind="visible: bankTransfer()"><input type="radio" value="bankTransfer" data-bind="checked: isChecked, enable: bankTransfer(), visible: bankTransfer()" />bankTransfer</label></div>
+        <div><label data-bind="visible: directDebit()"><input type="radio" value="directDebit" data-bind="checked: isChecked, enable: directDebit(), visible: directDebit()" />directDebit</label></div>
+        <div><label data-bind="visible: weChat()"><input type="radio" value="weChat" data-bind="checked: isChecked, enable: weChat(), visible: weChat()" />weChat</label></div>
+        <div><label data-bind="visible: line()"><input type="radio" value="line" data-bind="checked: isChecked, enable: line(), visible: line()" />line</label></div>
+        <div><label data-bind="visible: aliPay()"><input type="radio" value="aliPay" data-bind="checked: isChecked, enable: aliPay(), visible: aliPay()" />aliPay</label></div>
+
+
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->

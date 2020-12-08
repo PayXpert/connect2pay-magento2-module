@@ -38,7 +38,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Payment\Model\Method\AbstractMethod;
 use PayXpert\Connect2Pay\Connect2PayClient;
 
-class Payxpert extends AbstractMethod
+class PayxpertToken extends AbstractMethod
 {
     const PAYMENT_METHOD_CODE = 'payxpert';
 
@@ -116,7 +116,7 @@ class Payxpert extends AbstractMethod
         $this->logger = $logger;
     }
 
-    public function startTransaction(\Magento\Sales\Model\Order $order)
+    public function getCustomerToken(\Magento\Sales\Model\Order $order)
     {
         $order->getCustomerFirstname();
         $payment = $order->getPayment();
@@ -139,49 +139,19 @@ class Payxpert extends AbstractMethod
         $c2pClient->setShopperID($order->getCustomerID());
         $c2pClient->setShippingType(Connect2PayClient::SHIPPING_TYPE_VIRTUAL);
         $c2pClient->setAmount($order->getGrandTotal() * 100);
-        $c2pClient->setOrderDescription("Order #" . $order->getId());
+
         $c2pClient->setCurrency($order->getOrderCurrency()->getCurrencyCode());
-
-        $c2pClient->setShopperFirstName($order->getCustomerFirstname());
-        $c2pClient->setShopperLastName($order->getCustomerLastname());
-        $c2pClient->setShopperAddress($billingAddress->getStreetLine(1));
-        $c2pClient->setShopperZipcode($billingAddress->getPostcode());
-        $c2pClient->setShopperCity($billingAddress->getCity());
-        $c2pClient->setShopperState($billingAddress->getRegion());
-        $c2pClient->setShopperCountryCode($billingAddress->getCountryId());
-        $c2pClient->setShopperPhone($billingAddress->getTelephone());
-        $c2pClient->setShopperEmail($order->getCustomerEmail() ?: $billingAddress->getEmail());
-
-        if ($shippingAddress) {
-            $c2pClient->setShipToFirstName($shippingAddress->getCustomerFirstname());
-            $c2pClient->setShipToLastName($shippingAddress->getCustomerLastname());
-            $c2pClient->setShipToAddress($shippingAddress->getStreetLine(1));
-            $c2pClient->setShipToZipcode($shippingAddress->getPostcode());
-            $c2pClient->setShipToCity($shippingAddress->getCity());
-            $c2pClient->setShipToState($shippingAddress->getRegion());
-            $c2pClient->setShipToCountryCode($shippingAddress->getCountryId());
-            $c2pClient->setShipToPhone($shippingAddress->getTelephone());
-        }
-
-        $c2pClient->setCtrlRedirectURL($this->urlBuilder->getUrl('payxpert/checkout/success/'));
         $c2pClient->setCtrlCallbackURL($this->urlBuilder->getUrl('payxpert/checkout/callback/'));
-
-        $md5 = md5($order->getId() . $order->getGrandTotal() . $c2pClient->getPassword());
-
-        $c2pClient->setCtrlCustomData($md5);
 
         if ($c2pClient->validate()) {
             if ($c2pClient->preparePayment()) {
-//                $this->logger->cr($c2pClient->getMerchantToken());
-//                $z = $c2pClient->ge tMerchantT?oken();
-//                $this->logger->debug("Params Success", $params);
-
-                $this->customerSession->setMerchantToken($c2pClient->getMerchantToken());
-                $_SESSION['merchantToken'] = $c2pClient->getMerchantToken();
-                $paymentUrl = $c2pClient->getCustomerRedirectURL();
+                $customerToken = $c2pClient->getCustomerToken();
+                $this->customerSession->setCustomerToken($customerToken);
+                $_SESSION['customerToken'] = $customerToken;
+                return $customerToken;
 
             } else {
-                $message = "Preparation error occured: " .
+                $message = "Customer token preparation error occured: " .
                     $this->escaper->escapeHtml($c2pClient->getClientErrorMessage());
 
                 throw new \Magento\Framework\Validator\Exception(__($message));
@@ -190,8 +160,6 @@ class Payxpert extends AbstractMethod
             $message = "Validation error occured: " . $this->escaper->escapeHtml($c2pClient->getClientErrorMessage());
             throw new \Magento\Framework\Validator\Exception(__($message));
         }
-
-        return $paymentUrl;
     }
 
     public function getUrl()

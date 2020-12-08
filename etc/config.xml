@@ -6,6 +6,13 @@
             <payxpert>
                 <title>Credit cards with PayXpert</title>
                 <active>1</active>
+                <seamless_payment>0</seamless_payment>
+                <todito_cash>0</todito_cash>
+                <bank_transfer>0</bank_transfer>
+                <direct_debit>0</direct_debit>
+                <wechat>0</wechat>
+                <line>0</line>
+                <alipay>0</alipay>
                 <model>Payxpert\Connect2Pay\Model\Payment\Payxpert</model>
                 <order_status>pending</order_status>
                 <allowspecific>0</allowspecific>
