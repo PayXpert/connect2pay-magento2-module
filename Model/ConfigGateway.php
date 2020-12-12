@@ -1,6 +1,6 @@
 <?php
 /**
- Copyright 2016 PayXpert
+ Copyright 2020 PayXpert
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,12 +23,15 @@ use Magento\Framework\ObjectManagerInterface;
 use Payxpert\Connect2Pay\Model\Payment\Payxpert;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Store\Model\ScopeInterface;
+//use Magento\Framework\View\Asset\Repository;
 
 class ConfigGateway implements ConfigProviderInterface
 {
     /**
      * @var string[]
      */
+
+    protected $_assetRepo;
     protected $methodCode = Payxpert::PAYMENT_METHOD_CODE;
 
     /**
@@ -36,11 +39,14 @@ class ConfigGateway implements ConfigProviderInterface
      *
      * @param ScopeConfigInterface   $config
      * @param ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         ScopeConfigInterface   $config,
-        ObjectManagerInterface $objectManager
+        ObjectManagerInterface $objectManager,
+        \Magento\Framework\View\Asset\Repository $assetRepo
     ) {
+        $this->_assetRepo = $assetRepo;
         $this->_config = $config;
         $this->_objectManager = $objectManager;
     }
@@ -57,12 +63,24 @@ class ConfigGateway implements ConfigProviderInterface
         $apiUrl          = $this->_config->getValue('payment/payxpert/api_url', ScopeInterface::SCOPE_STORE);
         $iframe          = $this->_config->getValue('payment/payxpert/iframe', ScopeInterface::SCOPE_STORE);
         $seamlessPayment = $this->_config->getValue('payment/payxpert/seamless_payment', ScopeInterface::SCOPE_STORE);
-        $toditoCash      = $this->_config->getValue('payment/payxpert/todito_cash', ScopeInterface::SCOPE_STORE);
-        $bankTransfer    = $this->_config->getValue('payment/payxpert/bank_transfer', ScopeInterface::SCOPE_STORE);
-        $directDebit     = $this->_config->getValue('payment/payxpert/direct_debit', ScopeInterface::SCOPE_STORE);
+//        $toditoCash      = $this->_config->getValue('payment/payxpert/todito_cash', ScopeInterface::SCOPE_STORE);
+        $ideal           = $this->_config->getValue('payment/payxpert/ideal', ScopeInterface::SCOPE_STORE);
         $weChat          = $this->_config->getValue('payment/payxpert/wechat', ScopeInterface::SCOPE_STORE);
-        $line            = $this->_config->getValue('payment/payxpert/line', ScopeInterface::SCOPE_STORE);
+        $giropay         = $this->_config->getValue('payment/payxpert/giropay', ScopeInterface::SCOPE_STORE);
+        $sofort          = $this->_config->getValue('payment/payxpert/sofort', ScopeInterface::SCOPE_STORE);
         $aliPay          = $this->_config->getValue('payment/payxpert/alipay', ScopeInterface::SCOPE_STORE);
+        $przelewy24      = $this->_config->getValue('payment/payxpert/przelewy24', ScopeInterface::SCOPE_STORE);
+
+
+        $aliPayImageUrl        = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/alipay.png");
+        $weChatImageUrl        = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/wechat.png");
+        $creditCardPayImageUrl = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/creditcard.png");
+        $giroPayImageUrl       = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/giropay.png");
+        $idealImageUrl         = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/ideal.png");
+        $przelewy24ImageUrl    = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/przelewy24.png");
+        $sofortImageUrl        = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/sofort.png");
+
+
 
         if (!$active) {
             return [];
@@ -77,12 +95,23 @@ class ConfigGateway implements ConfigProviderInterface
                     'apiUrl'          => $apiUrl,
                     'iframe'          => $iframe,
                     'seamlessPayment' => $seamlessPayment,
-                    'toditoCash'      => $toditoCash,
-                    'bankTransfer'    => $bankTransfer,
-                    'directDebit'     => $directDebit,
+                    'ideal'           => $ideal,
+                    'giropay'         => $giropay,
+                    'sofort'          => $sofort,
                     'weChat'          => $weChat,
-                    'line'            => $line,
-                    'aliPay'          => $aliPay
+                    'przelewy24'      => $przelewy24,
+                    'aliPay'          => $aliPay,
+
+                    'aliPayImageUrl'     => $aliPayImageUrl,
+                    'weChatImageUrl'     => $weChatImageUrl,
+                    'giroPayImageUrl'    => $giroPayImageUrl,
+                    'idealImageUrl'      => $idealImageUrl,
+                    'przelewy24ImageUrl' => $przelewy24ImageUrl,
+                    'creditCardPayImageUrl' => $creditCardPayImageUrl,
+                    'sofortImageUrl'     => $sofortImageUrl,
+
+
+
                 ],
             ],
         ];

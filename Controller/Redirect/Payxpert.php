@@ -21,6 +21,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Psr\Log\LoggerInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Framework\App\RequestInterface;
 
 class Payxpert extends \Magento\Framework\App\Action\Action
 {
@@ -40,6 +41,7 @@ class Payxpert extends \Magento\Framework\App\Action\Action
      * @var Data
      */
     protected $_data;
+    protected $_request;
 
     /**
      * Redirect construtor
@@ -50,11 +52,13 @@ class Payxpert extends \Magento\Framework\App\Action\Action
      * @param PaymentHelper $paymentHelper
      */
     public function __construct(
+        RequestInterface $request,
         Context $context,
         Session $checkoutSession,
         LoggerInterface $logger,
         PaymentHelper $paymentHelper
     ) {
+        $this->_request = $request;
         $this->_checkoutSession = $checkoutSession;
         $this->_logger = $logger;
         $this->_paymentHelper = $paymentHelper;
@@ -72,8 +76,19 @@ class Payxpert extends \Magento\Framework\App\Action\Action
             }
 
             if ($methodInstance instanceof \Payxpert\Connect2Pay\Model\Payment\Payxpert) {
+                $params = $this->_request->getParams();
+                $bankTransferPaymentNetworks = ['sofort', 'przelewy24', 'ideal', 'giropay', 'eps', 'poli', 'dragonpay'];
+                $this->_logger->debug('Url Params', $params);
+                $paymentMethod = $params['paymentMethod'];
+                foreach ($bankTransferPaymentNetworks as $paymentNetwork) {
+                    if ($paymentMethod == $paymentNetwork) {
+                        $paymentMethod = 'BankTransfer';
+                        break;
+                    }
+                }
+
                 $storeId = $order->getStoreId();
-                $redirectUrl = $methodInstance->startTransaction($order);
+                $redirectUrl = $methodInstance->startTransaction($order, $paymentMethod, $paymentNetwork);
                 $this->_redirect($redirectUrl);
 
             } else {

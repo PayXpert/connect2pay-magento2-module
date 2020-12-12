@@ -116,7 +116,10 @@ class Payxpert extends AbstractMethod
         $this->logger = $logger;
     }
 
-    public function startTransaction(\Magento\Sales\Model\Order $order)
+    public function startTransaction(
+        \Magento\Sales\Model\Order $order,
+        $paymentMethod = "CreditCard",
+        $paymentNetwork = FALSE)
     {
         $order->getCustomerFirstname();
         $payment = $order->getPayment();
@@ -134,7 +137,10 @@ class Payxpert extends AbstractMethod
 
         $c2pClient->setOrderID($order->getId());
         // $c2pClient->setCustomerIP( $fields['customerIP'] );
-        $c2pClient->setPaymentMethod(Connect2PayClient::PAYMENT_METHOD_CREDITCARD);
+        $c2pClient->setPaymentMethod($paymentMethod);
+        if ($paymentNetwork) {
+            $c2pClient->setPaymentNetwork($paymentNetwork);
+        }
         $c2pClient->setPaymentMode(Connect2PayClient::PAYMENT_MODE_SINGLE);
         $c2pClient->setShopperID($order->getCustomerID());
         $c2pClient->setShippingType(Connect2PayClient::SHIPPING_TYPE_VIRTUAL);

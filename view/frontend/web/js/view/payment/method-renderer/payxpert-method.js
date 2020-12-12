@@ -1,41 +1,47 @@
 define(
     [
         'Magento_Checkout/js/view/payment/default',
-        'mage/url'
+        'mage/url',
+        'ko',
+        'jquery'
 
     ],
-    function (Component, url) {
+    function (Component, url, ko, $) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
             defaults: {
-                template: 'Payxpert_Connect2Pay/payment/payxpert'
+                template: 'Payxpert_Connect2Pay/payment/payxpert',
+                aliPay: Boolean(parseInt(window.checkoutConfig.payment.payxpert.aliPay)),
+                aliPayImageUrl: window.checkoutConfig.payment.payxpert.aliPayImageUrl,
+                creditCard: true,
+                creditCardPayImageUrl: window.checkoutConfig.payment.payxpert.creditCardPayImageUrl,
+
+                weChat: Boolean(parseInt(window.checkoutConfig.payment.payxpert.weChat)),
+                weChatImageUrl: window.checkoutConfig.payment.payxpert.weChatImageUrl,
+
+                ideal: Boolean(parseInt(window.checkoutConfig.payment.payxpert.ideal)),
+                idealImageUrl: window.checkoutConfig.payment.payxpert.idealImageUrl,
+
+                giropay: Boolean(parseInt(window.checkoutConfig.payment.payxpert.giropay)),
+                giroPayImageUrl: window.checkoutConfig.payment.payxpert.giroPayImageUrl,
+
+                sofort: Boolean(parseInt(window.checkoutConfig.payment.payxpert.sofort)),
+                sofortImageUrl: window.checkoutConfig.payment.payxpert.sofortImageUrl,
+
+                przelewy24: Boolean(parseInt(window.checkoutConfig.payment.payxpert.przelewy24)),
+                przelewy24ImageUrl: window.checkoutConfig.payment.payxpert.przelewy24ImageUrl,
+
+                isCheckedPaymentMethod: ko.observable("creditCard"),
             },
             getCode: function () {
                 return 'payxpert';
             },
-            toditoCash: function () {
-                return window.checkoutConfig.payment.payxpert.toditoCash == '1' ? true : false;
-            },
-            bankTransfer: function () {
-                return window.checkoutConfig.payment.payxpert.bankTransfer == '1' ? true : false;
-            },
-            directDebit: function () {
-                return window.checkoutConfig.payment.payxpert.directDebit == '1' ? true : false;
-            },
-            weChat: function () {
-                return window.checkoutConfig.payment.payxpert.weChat == '1' ? true : false;
-            },
-            line: function () {
-                return window.checkoutConfig.payment.payxpert.line == '1' ? true : false;
-            },
-            aliPay: function () {
-                return window.checkoutConfig.payment.payxpert.aliPay == '1' ? true : false;
 
-            },
             afterPlaceOrder: function () {
-                if (window.checkoutConfig.payment.payxpert.iframe == '0') {
-                    window.location.replace(url.build('payxpert/redirect/payxpert/'));
+
+                if (!Boolean(parseInt(window.checkoutConfig.payment.payxpert.iframe))) {
+                    window.location.replace(url.build('payxpert/redirect/payxpert/?paymentMethod=' + this.isCheckedPaymentMethod()));
                 } else {
                     window.location.replace(url.build('payxpert/iframe/payxpert/'));
                 }
