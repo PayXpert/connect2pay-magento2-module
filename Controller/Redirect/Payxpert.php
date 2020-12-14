@@ -80,13 +80,18 @@ class Payxpert extends \Magento\Framework\App\Action\Action
                 $bankTransferPaymentNetworks = ['sofort', 'przelewy24', 'ideal', 'giropay', 'eps', 'poli', 'dragonpay'];
                 $this->_logger->debug('Url Params', $params);
                 $paymentMethod = $params['paymentMethod'];
+
+
                 foreach ($bankTransferPaymentNetworks as $paymentNetwork) {
                     if ($paymentMethod == $paymentNetwork) {
                         $paymentMethod = 'BankTransfer';
                         break;
                     }
+                    else {
+                        $paymentNetwork = FALSE;
+                    }
                 }
-
+                $this->_logger->debug('Payments',[$paymentMethod, $paymentNetwork]);
                 $storeId = $order->getStoreId();
                 $redirectUrl = $methodInstance->startTransaction($order, $paymentMethod, $paymentNetwork);
                 $this->_redirect($redirectUrl);

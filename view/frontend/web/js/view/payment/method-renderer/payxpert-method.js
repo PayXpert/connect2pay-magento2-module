@@ -32,7 +32,7 @@ define(
                 przelewy24: Boolean(parseInt(window.checkoutConfig.payment.payxpert.przelewy24)),
                 przelewy24ImageUrl: window.checkoutConfig.payment.payxpert.przelewy24ImageUrl,
 
-                isCheckedPaymentMethod: ko.observable("creditCard"),
+                isCheckedPaymentMethod: ko.observable("CreditCard"),
             },
             getCode: function () {
                 return 'payxpert';
