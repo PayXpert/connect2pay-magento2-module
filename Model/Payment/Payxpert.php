@@ -184,6 +184,7 @@ class Payxpert extends AbstractMethod
 
                 $this->customerSession->setMerchantToken($c2pClient->getMerchantToken());
                 $_SESSION['merchantToken'] = $c2pClient->getMerchantToken();
+                $this->logger->debug($_SESSION);
                 $paymentUrl = $c2pClient->getCustomerRedirectURL();
 
             } else {
