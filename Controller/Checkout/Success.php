@@ -25,6 +25,7 @@ use Payxpert\Connect2Pay\Model\Payment\Payxpert as PayxpertModel;
 use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\Session\SessionManagerInterface;
 
 
 use Magento\Framework\App\Action\Action;
@@ -81,10 +82,13 @@ class Success extends Action
     {
         $params = $this->getRequest()->getParams();
 
-        $merchantToken = $this->customerSession->getMerchantToken();
-
+//        $merchantToken = $this->checkoutSession->getMerchatTokenInSession();
+        $merchantToken = $this->customerSession->getMerchatTokenInSession();
+        $merchantToken2 = $this->customerSession->getMerchantToken();
         $this->logger->debug("Success start");
         $this->logger->debug("Params Success", $params);
+        $this->logger->debug("Merchant cusstomer Success token:" . $merchantToken);
+        $this->logger->debug("Merchant cusstomer Success token:" . $merchantToken2);
 
         if ($merchantToken != null) {
             // Extract data received from the payment page

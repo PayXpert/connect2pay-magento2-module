@@ -100,6 +100,7 @@ class Callback extends Action
             // Get the Error code
             $status = $c2pClient->getStatus();
             $merchantToken = $status->getMerchantToken();
+            $this->customerSession->setMerchatTokenInSession($merchantToken);
             $paymentStatus = $c2pClient->getPaymentStatus($merchantToken);
 
             $errorCode = $status->getErrorCode();

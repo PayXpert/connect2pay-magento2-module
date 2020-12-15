@@ -11,36 +11,91 @@
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
         <div class="cc-selector">
-            <input id="aliPay" type="radio" value="Alipay" data-bind="visible: aliPay, enable: aliPay, checked: isCheckedPaymentMethod"  />
-            <label class="drinkcard-cc" for="aliPay" data-bind="visible: aliPay, style: { backgroundImage: 'url(\'' + aliPayImageUrl + '\')' }">
-            </label>
-
-            <input id="weChat" type="radio" value="WeChat" data-bind="visible: weChat, enable: weChat, checked: isCheckedPaymentMethod"  />
-            <label class="drinkcard-cc" for="weChat" data-bind="visible: weChat, style: { backgroundImage: 'url(\'' + weChatImageUrl + '\')' }">
-            </label>
-
             <input id="creditCard" type="radio" value="CreditCard" data-bind="visible: creditCard, enable: creditCard, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="creditCard" data-bind="visible: creditCard, style: { backgroundImage: 'url(\'' + creditCardPayImageUrl + '\')' }">
-            </label>
-
-            <input id="ideal" type="radio" value="ideal" data-bind="visible: ideal, enable: ideal, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="ideal" data-bind="visible: ideal, style: { backgroundImage: 'url(\'' + idealImageUrl + '\')' }">
-            </label>
-
-            <input id="giropay" type="radio" value="giropay" data-bind="visible: giropay, enable: giropay, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="giropay" data-bind="visible: giropay, style: { backgroundImage: 'url(\'' + giroPayImageUrl + '\')' }">
+            <label class="drinkcard-cc" for="creditCard" data-bind="text: $t('Pay by CreditCard'), visible: creditCard, style: { backgroundImage: 'url(\'' + creditCardPayImageUrl + '\')' }">
             </label>
 
             <input id="sofort" type="radio" value="sofort" data-bind="visible: sofort, enable: sofort, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="sofort" data-bind="visible: sofort, style: { backgroundImage: 'url(\'' + sofortImageUrl + '\')' }">
+            <label class="drinkcard-cc" for="sofort" data-bind="text: $t('Pay by Bank Transfer via Sofort'), visible: sofort, style: { backgroundImage: 'url(\'' + sofortImageUrl + '\')' }">
             </label>
 
             <input id="przelewy24" type="radio" value="przelewy24" data-bind="visible: przelewy24, enable: przelewy24, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="przelewy24" data-bind="visible: przelewy24, style: { backgroundImage: 'url(\'' + przelewy24ImageUrl + '\')' }">
+            <label class="drinkcard-cc" for="przelewy24" data-bind="text: $t('Pay by Bank Transfer via Przelewy24'), visible: przelewy24, style: { backgroundImage: 'url(\'' + przelewy24ImageUrl + '\')' }">
             </label>
+
+            <input id="ideal" type="radio" value="ideal" data-bind="visible: ideal, enable: ideal, checked: isCheckedPaymentMethod" />
+            <label class="drinkcard-cc" for="ideal" data-bind="text: $t('Pay by Bank Transfer via iDeal'),  visible: ideal, style: { backgroundImage: 'url(\'' + idealImageUrl + '\')' }">
+            </label>
+
+            <input id="giropay" type="radio" value="giropay" data-bind="visible: giropay, enable: giropay, checked: isCheckedPaymentMethod" />
+            <label class="drinkcard-cc" for="giropay" data-bind="text: $t('Pay by Bank Transfer via Giropay'), visible: giropay, style: { backgroundImage: 'url(\'' + giroPayImageUrl + '\')' }">
+            </label>
+
+            <input id="aliPay" type="radio" value="Alipay" data-bind="visible: aliPay, enable: aliPay, checked: isCheckedPaymentMethod"  />
+            <label class="drinkcard-cc" for="aliPay" data-bind="text: $t('Pay by AliPay'), visible: aliPay, style: { backgroundImage: 'url(\'' + aliPayImageUrl + '\')' }">
+
+            </label>
+
+            <input id="weChat" type="radio" value="WeChat" data-bind="visible: weChat, enable: weChat, checked: isCheckedPaymentMethod"  />
+            <label class="drinkcard-cc" for="weChat" data-bind="text: $t('Pay by WeChat'), visible: weChat, style: { backgroundImage: 'url(\'' + weChatImageUrl + '\')' }">
+            </label>
+
+
+
+
+
+
+
+
+
+
 
             <div data-bind="text: isCheckedPaymentMethod"></div>
         </div>
+        <style>
+            .cc-selector input{
+                margin:0;padding:0;
+                -webkit-appearance:none;
+                -moz-appearance:none;
+                appearance:none;
+            }
+
+            .cc-selector input:active +.drinkcard-cc{opacity: .9;}
+            .cc-selector input:checked +.drinkcard-cc{
+                -webkit-filter: none;
+                -moz-filter: none;
+                filter: none;
+                border-color: darkseagreen;
+            }
+            .drinkcard-cc {
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 3px;
+                text-align: center;
+                line-height: 500%;
+                display: block;
+                border: 2px solid gainsboro;
+                cursor: pointer;
+                background-size: contain;
+                background-repeat: no-repeat;
+                height: 70px;
+                -webkit-transition: all 100ms ease-in;
+                -moz-transition: all 100ms ease-in;
+                transition: all 100ms ease-in;
+                /*-webkit-filter: brightness(1.8) grayscale(1) opacity(.7);*/
+                /*-moz-filter: brightness(1.8) grayscale(1) opacity(.7);*/
+                /*filter: brightness(1.8) grayscale(1) opacity(.7);*/
+                /* padding: 0; */
+                background-origin: content-box;
+                background-color: whitesmoke;
+            }
+            .drinkcard-cc:hover{
+                border-color: cadetblue;
+                /*-webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);*/
+                /*-moz-filter: brightness(1.2) grayscale(.5) opacity(.9);*/
+                /*filter: brightness(1.2) grayscale(.5) opacity(.9);*/
+            }
+        </style>
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
@@ -68,38 +123,4 @@
     </div>
 </div>
 
-<style>
-    .cc-selector input{
-        margin:0;padding:0;
-        -webkit-appearance:none;
-        -moz-appearance:none;
-        appearance:none;
-    }
-    .visa{background-image:url(http://i.imgur.com/lXzJ1eB.png);}
-    .mastercard{background-image:url(http://i.imgur.com/SJbRQF7.png);}
 
-    .cc-selector input:active +.drinkcard-cc{opacity: .9;}
-    .cc-selector input:checked +.drinkcard-cc{
-        -webkit-filter: none;
-        -moz-filter: none;
-        filter: none;
-    }
-    .drinkcard-cc{
-        cursor:pointer;
-        background-size:contain;
-        background-repeat:no-repeat;
-        display:inline-block;
-        width:100px;height:70px;
-        -webkit-transition: all 100ms ease-in;
-        -moz-transition: all 100ms ease-in;
-        transition: all 100ms ease-in;
-        -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
-        -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
-        filter: brightness(1.8) grayscale(1) opacity(.7);
-    }
-    .drinkcard-cc:hover{
-        -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        filter: brightness(1.2) grayscale(.5) opacity(.9);
-    }
-</style>
