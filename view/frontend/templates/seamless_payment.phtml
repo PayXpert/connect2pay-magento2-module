@@ -10,5 +10,13 @@
         </script>
     </div>
 </div>
+<b>Seamless payment2</b>
+<script type="text/javascript">
+    require([
+        'domReady!',
+        'https://connect2.payxpert.com/payment/<?php echo $block->getCustomerTokenForBlock(); ?>/connect2pay-seamless-v1.2.1.js'
+    ], function () {
 
-<script async="true" src="https://connect2.payxpert.com/payment/<?php echo $block->getCustomerTokenForBlock(); ?>/connect2pay-seamless-v1.2.1.js" data-mount-in="#payment-container" integrity="sha384-KoRUPIW3yZfYzkFzrA1D2/qUKXpnNoiyflE7W0V4kDhJtuQJn8BbwkqrzRPdsXx3" crossorigin="anonymous"></script>
+    });
+</script>
+<!--<script async="true" src="https://connect2.payxpert.com/payment/--><?php //echo $block->getCustomerTokenForBlock(); ?><!--/connect2pay-seamless-v1.2.1.js" data-mount-in="#payment-container" integrity="sha384-KoRUPIW3yZfYzkFzrA1D2/qUKXpnNoiyflE7W0V4kDhJtuQJn8BbwkqrzRPdsXx3" crossorigin="anonymous"></script>-->

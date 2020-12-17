@@ -17,6 +17,7 @@
 
 namespace Payxpert\Connect2Pay\Model\Payment;
 
+use Magento\Variable\Model\VariableFactory;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -53,6 +54,7 @@ class Payxpert extends AbstractMethod
     protected $customerSession;
     protected $escaper;
     protected $helper;
+    protected $variable;
 
     /**
      * PayXpert constructor.
@@ -75,6 +77,7 @@ class Payxpert extends AbstractMethod
      * @param array $data
      */
     public function __construct(
+        VariableFactory $_variable,
         Context $context,
         Registry $registry,
         ExtensionAttributesFactory $extensionFactory,
@@ -106,7 +109,7 @@ class Payxpert extends AbstractMethod
             $resourceCollection,
             $data
         );
-
+        $this->variable = $_variable;
         $this->urlBuilder = $urlBuilder;
         $this->checkoutSession = $checkoutSession;
         $this->order = $order;
@@ -174,17 +177,29 @@ class Payxpert extends AbstractMethod
 
         $md5 = md5($order->getId() . $order->getGrandTotal() . $c2pClient->getPassword());
 
-        $c2pClient->setCtrlCustomData($md5);
+        $c2pClient->setCtrlCustomData($this->checkoutSession->getSessionId());
 
         if ($c2pClient->validate()) {
             if ($c2pClient->preparePayment()) {
 //                $this->logger->cr($c2pClient->getMerchantToken());
-//                $z = $c2pClient->ge tMerchantT?oken();
 //                $this->logger->debug("Params Success", $params);
 
                 $this->customerSession->setMerchantToken($c2pClient->getMerchantToken());
                 $_SESSION['merchantToken'] = $c2pClient->getMerchantToken();
-                $this->logger->debug($_SESSION);
+                $customerToken = $c2pClient->getCustomerToken();
+                $merchantToken = $c2pClient->getMerchantToken();
+
+                $variable = $this->variable->create();
+                $data = [
+                    'code' => $customerToken,
+                    'name' => 'Merchant token from customer token',
+                    'html_value' => '',
+                    'plain_value' => $merchantToken,
+
+                ];
+                $variable->setData($data);
+                $variable->save();
+
                 $paymentUrl = $c2pClient->getCustomerRedirectURL();
 
             } else {

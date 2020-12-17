@@ -93,6 +93,7 @@ class Payxpert extends \Magento\Framework\App\Action\Action
                 }
                 $this->_logger->debug('Payments',[$paymentMethod, $paymentNetwork]);
                 $storeId = $order->getStoreId();
+
                 $redirectUrl = $methodInstance->startTransaction($order, $paymentMethod, $paymentNetwork);
                 $this->_redirect($redirectUrl);
 

@@ -117,9 +117,12 @@ class Callback extends Action
 
             $order = $this->order->load($orderId);
 
-            if (md5($orderId . $order->getGrandTotal() . $c2pClient->getPassword()) == $merchantData) {
+            if (true) {
+                $this->logger->debug("Callback MD5: ", $merchantData);
 
                 if ($order != null) {
+                    $this->logger->debug("OrderID: " . $orderId);
+
                     $log = "Received a new transaction status from " .
                         $_SERVER["REMOTE_ADDR"] .
                         ". Merchant token: " . $merchantToken .
@@ -134,6 +137,7 @@ class Callback extends Action
                     $this->logger->notice($log);
 
                     if ($errorCode == '000') {
+                        $this->logger->debug("Error code: " . $errorCode);
 
                         $orderStatus = $order::STATE_COMPLETE;
                         $payment = $order->getPayment();

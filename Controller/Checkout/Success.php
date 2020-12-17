@@ -17,6 +17,7 @@
 
 namespace Payxpert\Connect2Pay\Controller\Checkout;
 
+use Magento\Variable\Model\VariableFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -41,6 +42,7 @@ class Success extends Action
     protected $payxpertHelper;
     protected $order;
     protected $logger;
+    protected $variable;
 
     /**
      * Success constructor.
@@ -55,6 +57,7 @@ class Success extends Action
      * @param LoggerInterface $logger
      */
     public function __construct(
+        VariableFactory $_variable,
         Context $context,
         Session $checkoutSession,
         CustomerSession $customerSession,
@@ -64,6 +67,7 @@ class Success extends Action
         Order $order,
         LoggerInterface $logger
     ) {
+        $this->variable = $_variable;
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
         $this->paymentHelper = $paymentHelper;
@@ -81,14 +85,14 @@ class Success extends Action
     public function execute()
     {
         $params = $this->getRequest()->getParams();
+        $this->getRequest()->setParams(['ajax' => 1]);
 
-//        $merchantToken = $this->checkoutSession->getMerchatTokenInSession();
-        $merchantToken = $this->customerSession->getMerchatTokenInSession();
-        $merchantToken2 = $this->customerSession->getMerchantToken();
-        $this->logger->debug("Success start");
-        $this->logger->debug("Params Success", $params);
-        $this->logger->debug("Merchant cusstomer Success token:" . $merchantToken);
-        $this->logger->debug("Merchant cusstomer Success token:" . $merchantToken2);
+        $var = $this->variable->create();
+        $var->loadByCode($params['customer']);
+
+        $merchantToken = $var->getValue('text');
+        $var->unsetData();
+        $this->logger->debug("Success merchant token from variable: " . $merchantToken);
 
         if ($merchantToken != null) {
             // Extract data received from the payment page
@@ -104,20 +108,35 @@ class Success extends Action
                     $this->payxpertHelper->getConfig('payment/Payxpert/password')
                 );
                 if ($c2pClient->handleRedirectStatus($data, $merchantToken)) {
+                    $this->logger->debug("Success 4th");
+
                     // Get the Error code
                     $status = $c2pClient->getStatus();
 
                     $errorCode = $status->getErrorCode();
-                    $merchantData = $status->getCtrlCustomData();
+                    $sessionId = $status->getCtrlCustomData();
+                    $this->checkoutSession->setSessionId($sessionId);
                     $orderId = $status->getOrderID();
 
                     $session = $this->checkoutSession;
+                    $this->logger->debug("Session ID: ". $session->getSessionId());
+
+
                     $session->setQuoteId($orderId);
                     $session->getQuote()->setIsActive(false)->save();
                     // errorCode = 000 => payment is successful
                     if ($errorCode == '000') {
+                        $this->logger->debug("Success 5th");
+
                         // Display the payment confirmation page
+
+//                        $order = $this->order->load($orderId);
+
+//                        $this->checkoutSession->setLastSuccessQuoteId($order->getQouteId());
+//                        $this->checkoutSession->setLastQuoteId($order->getQouteId());
+//                        $this->checkoutSession->setLastOrderId($order->getEntityId());
                         $this->checkoutSession->start();
+
                         $this->_redirect('checkout/onepage/success?utm_nooverride=1');
                         return;
                     } else {

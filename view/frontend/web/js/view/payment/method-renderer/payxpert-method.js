@@ -40,8 +40,10 @@ define(
 
             afterPlaceOrder: function () {
 
-                if (!Boolean(parseInt(window.checkoutConfig.payment.payxpert.iframe))) {
-                    window.location.replace(url.build('payxpert/redirect/payxpert/?paymentMethod=' + this.isCheckedPaymentMethod()));
+                if (Boolean(parseInt(window.checkoutConfig.payment.payxpert.seamlessPayment)) && (this.isCheckedPaymentMethod() === "CreditCard")) {
+                    window.location.replace(url.build('payxpert/seamless/payment/'));
+                } else if (!Boolean(parseInt(window.checkoutConfig.payment.payxpert.iframe))) {
+                    window.location.replace(url.build('payxpert/iframe/payxpert/'));
                 } else {
                     window.location.replace(url.build('payxpert/iframe/payxpert/'));
                 }
