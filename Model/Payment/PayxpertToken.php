@@ -118,6 +118,7 @@ class PayxpertToken extends AbstractMethod
 
     public function getCustomerToken(\Magento\Sales\Model\Order $order)
     {
+        $this->logger->debug(['Token token']);
         $order->getCustomerFirstname();
         $payment = $order->getPayment();
         $method = $order->getPayment()->getMethod();

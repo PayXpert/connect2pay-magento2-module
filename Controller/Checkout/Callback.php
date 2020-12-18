@@ -87,7 +87,7 @@ class Callback extends Action
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-        $this->logger->debug("Params Callback", $params);
+        $this->logger->debug("Callback params", $params);
 
         $c2pClient = new Connect2PayClient(
             $this->payxpertModel->getUrl(),
@@ -96,29 +96,38 @@ class Callback extends Action
         );
 
         if ($c2pClient->handleCallbackStatus()) {
+            $this->logger->debug("HandleCallbackAfter7");
 
             // Get the Error code
             $status = $c2pClient->getStatus();
             $merchantToken = $status->getMerchantToken();
-            $this->customerSession->setMerchatTokenInSession($merchantToken);
+            $this->logger->debug("Merchant Token2 " . $merchantToken);
+
+//            $this->customerSession->setMerchatTokenInSession($merchantToken);
             $paymentStatus = $c2pClient->getPaymentStatus($merchantToken);
+            $this->logger->debug("Payment status23: ");
 
             $errorCode = $status->getErrorCode();
+            $this->logger->debug("Error Code1: " . $errorCode);
+
             // Custom data that could have been provided in ctrlCustomData when creating
-            $merchantData = $status->getCtrlCustomData();
+            $customData = $status->getCtrlCustomData();
+            $this->logger->debug("Session Custom Data1: " . $customData);
 
             $transaction = $paymentStatus->getLastTransactionAttempt();
+            $this->logger->debug("Transaction in Callback ");
 
             $currency = $status->getCurrency();
 
             $amount = $status->getAmount() / 100;
 
             $orderId = $status->getOrderID();
+            $this->logger->debug("OrderID : ". $orderId);
 
             $order = $this->order->load($orderId);
 
             if (true) {
-                $this->logger->debug("Callback MD5: ", $merchantData);
+                $this->logger->debug("Session Custom Data2: " . $customData);
 
                 if ($order != null) {
                     $this->logger->debug("OrderID: " . $orderId);
