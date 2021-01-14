@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-      <css src="css/iframe.css" />
-      <link src="Payxpert_Connect2Pay::js/iframe/redirection_handler.js"/>
+<!--      <css src="css/iframe.css" />-->
+<!--      <link src="Payxpert_Connect2Pay::js/connect2pay-seamless-v1.2.2.js"/>-->
     </head>
     <body>
         <referenceContainer name="content">
             <block class="Payxpert\Connect2Pay\Block\Seamless" name="payxpert_seamless" template="seamless_payment.phtml" cacheable="false">
             </block>
         </referenceContainer>
+<!--        <referenceBlock name="require.js">-->
+<!--            <action method="setTemplate">-->
+<!--                <argument name="template" xsi:type="string">Payxpert_Connect2Pay::success/head.phtml</argument>-->
+<!--            </action>-->
+<!--        </referenceBlock>-->
     </body>
 </page>

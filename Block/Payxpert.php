@@ -47,7 +47,8 @@ class Payxpert extends \Magento\Framework\View\Element\Template
     /**
      * Prepares block data
      *
-     * @return void
+     * @return bool
+     * @throws \Magento\Framework\Validator\Exception
      */
     protected function prepareBlockData()
     {

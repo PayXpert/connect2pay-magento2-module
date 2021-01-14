@@ -12,7 +12,7 @@
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License. 
+   limitations under the License.
  */
 
 namespace Payxpert\Connect2Pay\Controller\Iframe;
@@ -21,15 +21,17 @@ use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
 use Psr\Log\LoggerInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Checkout\Model\Session\SuccessValidator;
 
 class Payxpert extends \Magento\Checkout\Controller\Onepage
 {
     public function execute()
     {
         $session = $this->getOnepage()->getCheckout();
-        if (!$this->_objectManager->get('Magento\Checkout\Model\Session\SuccessValidator')->isValid()) {
+        if (!SuccessValidator::class) {
             return $this->resultRedirectFactory->create()->setPath('checkout/cart');
         }
+
         $session->clearQuote();
 
         $resultPage = $this->resultPageFactory->create();

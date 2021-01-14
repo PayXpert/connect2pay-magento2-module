@@ -39,5 +39,10 @@
                 </argument>
             </arguments>
         </referenceBlock>
+<!--        <referenceBlock name="require.js">-->
+<!--            <action method="setTemplate">-->
+<!--                <argument name="template" xsi:type="string">Payxpert_Connect2Pay::success/head.phtml</argument>-->
+<!--            </action>-->
+<!--        </referenceBlock>-->
     </body>
 </page>

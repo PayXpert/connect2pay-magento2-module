@@ -5,6 +5,8 @@ namespace Payxpert\Connect2Pay\Block;
 use Magento\Customer\Model\Context;
 use Magento\Sales\Model\Order;
 use Payxpert\Connect2Pay\Model\Payment\PayxpertToken;
+use Payxpert\Connect2Pay\Model\ConfigGateway;
+use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 
 class Seamless extends \Magento\Framework\View\Element\Template
 {
@@ -12,16 +14,19 @@ class Seamless extends \Magento\Framework\View\Element\Template
     protected $checkoutSession;
     protected $customerSession;
     protected $payxpertToken;
+    protected $helper;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Customer\Model\Session $customerSession,
         PayxpertToken $_payxpertToken,
+        PayxpertHelper $_helper,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->checkoutSession = $checkoutSession;
+        $this->helper = $_helper;
         $this->customerSession = $customerSession;
         $this->payxpertToken = $_payxpertToken;
     }
@@ -34,6 +39,7 @@ class Seamless extends \Magento\Framework\View\Element\Template
     public function getAdditionalInfoHtml()
     {
         return $this->_layout->renderElement('order.success.additional.info');
+
     }
 
     /**
@@ -66,5 +72,19 @@ class Seamless extends \Magento\Framework\View\Element\Template
     {
         $order = $this->checkoutSession->getLastRealOrder();
         return $this->payxpertToken->getCustomerToken($order);
+    }
+
+    /**
+     * Prepares block data
+     *
+     * @return string
+     */
+    public function getPayxpertUrl()
+    {
+        $url = trim($this->helper->getConfig('payment/payxpert/url'));
+        if (empty($url)) {
+            $url = "https://connect2.payxpert.com";
+        }
+        return $url;
     }
 }

@@ -37,7 +37,12 @@ define(
             getCode: function () {
                 return 'payxpert';
             },
+            initialize: function() {
+                this._super(); // This is required ＼（〇_ｏ）／
+                this.selectPaymentMethod();
 
+
+            },
             afterPlaceOrder: function () {
 
                 if (Boolean(parseInt(window.checkoutConfig.payment.payxpert.seamlessPayment)) && (this.isCheckedPaymentMethod() === "CreditCard")) {
