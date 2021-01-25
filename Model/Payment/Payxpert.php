@@ -122,6 +122,13 @@ class Payxpert extends AbstractMethod
         $this->logger = $logger;
     }
 
+    /**
+     * @param Order $order
+     * @param string $paymentMethod
+     * @param false $paymentNetwork
+     * @return string
+     * @throws \Magento\Framework\Validator\Exception
+     */
     public function startTransaction(
         Order $order,
         $paymentMethod = "CreditCard",
@@ -212,7 +219,8 @@ class Payxpert extends AbstractMethod
                 }
 
                 $paymentUrl = $c2pClient->getCustomerRedirectURL();
-
+                $order->setStatus('pending_payment');
+                $order->save();
             } else {
                 $message = "Preparation error at " . $url2 . " occurred: " .
                     $this->escaper->escapeHtml($c2pClient->getClientErrorMessage());
@@ -227,12 +235,16 @@ class Payxpert extends AbstractMethod
         return $paymentUrl;
     }
 
-    public function getUrl()
+    /**
+     * @return string
+     */
+    public function getUrl(): string
     {
         $url = trim($this->helper->getConfig('payment/payxpert/url'));
         if (empty($url)) {
             $url = "https://connect2.payxpert.com";
         }
-        return preg_replace("(^https?://)", "", $url);
+        return $url;
+//        return preg_replace("(^https?://)", "", $url);
     }
 }
