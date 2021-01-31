@@ -4,7 +4,7 @@
     <default>
         <payment>
             <payxpert>
-                <title>Credit cards with PayXpert</title>
+                <title>Payment with PayXpert</title>
                 <active>1</active>
                 <seamless_payment>0</seamless_payment>
                 <przelewy24>0</przelewy24>

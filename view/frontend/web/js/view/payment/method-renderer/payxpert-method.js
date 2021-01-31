@@ -12,8 +12,9 @@ define(
             redirectAfterPlaceOrder: false,
             defaults: {
                 template: 'Payxpert_Connect2Pay/payment/payxpert',
-                aliPay: Boolean(parseInt(window.checkoutConfig.payment.payxpert.aliPay)),
+                alipay: Boolean(parseInt(window.checkoutConfig.payment.payxpert.alipay)),
                 aliPayImageUrl: window.checkoutConfig.payment.payxpert.aliPayImageUrl,
+
                 creditCard: true,
                 creditCardPayImageUrl: window.checkoutConfig.payment.payxpert.creditCardPayImageUrl,
 
@@ -37,21 +38,13 @@ define(
             getCode: function () {
                 return 'payxpert';
             },
-            initialize: function() {
+            initialize: function () {
                 this._super(); // This is required ＼（〇_ｏ）／
                 this.selectPaymentMethod();
 
-
             },
             afterPlaceOrder: function () {
-
-                if (Boolean(parseInt(window.checkoutConfig.payment.payxpert.seamlessPayment)) && (this.isCheckedPaymentMethod() === "CreditCard")) {
-                    window.location.replace(url.build('payxpert/seamless/payment/'));
-                } else if (!Boolean(parseInt(window.checkoutConfig.payment.payxpert.iframe))) {
-                    window.location.replace(url.build('payxpert/redirect/payxpert/?paymentMethod=' + this.isCheckedPaymentMethod()));
-                } else {
-                    window.location.replace(url.build('payxpert/iframe/payxpert/'));
-                }
+                window.location.replace(url.build('payxpert/redirect/payxpert/?paymentMethod=' + this.isCheckedPaymentMethod()));
             }
         });
     }

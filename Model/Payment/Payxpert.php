@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 PayXpert
+ * Copyright 2021 PayXpert
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 
 namespace Payxpert\Connect2Pay\Model\Payment;
 
+use Magento\Framework\Exception\PaymentException;
+use Magento\Framework\Validator\Exception;
 use Magento\Variable\Model\VariableFactory;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
@@ -25,9 +27,7 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Model\Method\Logger;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\UrlInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Sales\Model\Order;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -67,9 +67,7 @@ class Payxpert extends AbstractMethod
      * @param PaymentHelper $paymentData
      * @param ScopeConfigInterface $scopeConfig
      * @param Logger $logger
-     * @param ObjectManagerInterface $objectManager
      * @param UrlInterface $urlBuilder
-     * @param StoreManagerInterface $storeManager
      * @param Session $checkoutSession
      * @param Order $order
      * @param CustomerSession $customerSession
@@ -88,9 +86,7 @@ class Payxpert extends AbstractMethod
         PaymentHelper $paymentData,
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
-        ObjectManagerInterface $objectManager,
         UrlInterface $urlBuilder,
-        StoreManagerInterface $storeManager,
         Session $checkoutSession,
         Order $order,
         CustomerSession $customerSession,
@@ -127,22 +123,18 @@ class Payxpert extends AbstractMethod
      * @param string $paymentMethod
      * @param false $paymentNetwork
      * @return string
-     * @throws \Magento\Framework\Validator\Exception
+     * @throws Exception
+     * @throws \Exception
      */
     public function startTransaction(
         Order $order,
         $paymentMethod = "CreditCard",
         $paymentNetwork = false
-    ) {
+    ): string {
         $order->getCustomerFirstname();
-        $payment = $order->getPayment();
-        $method = $order->getPayment()->getMethod();
 
         $originator = $this->helper->getConfig('payment/payxpert/originator');
         $password = $this->helper->getConfig('payment/payxpert/password');
-        $url = $this->helper->getConfig('payment/payxpert/url');
-        $api_url = $this->helper->getConfig('payment/payxpert/api_url');
-        $url2 = $this->getUrl();
 
         $c2pClient = new Connect2PayClient($this->getUrl(), $originator, $password);
 
@@ -155,8 +147,6 @@ class Payxpert extends AbstractMethod
         if ($paymentNetwork) {
             $c2pClient->setPaymentNetwork($paymentNetwork);
         }
-
-        $this->logger->debug([$url2, 'url']);
 
         $c2pClient->setPaymentMode(Connect2PayClient::PAYMENT_MODE_SINGLE);
         $c2pClient->setShopperID($order->getCustomerID());
@@ -176,8 +166,8 @@ class Payxpert extends AbstractMethod
         $c2pClient->setShopperEmail($order->getCustomerEmail() ?: $billingAddress->getEmail());
 
         if ($shippingAddress) {
-            $c2pClient->setShipToFirstName($shippingAddress->getCustomerFirstname());
-            $c2pClient->setShipToLastName($shippingAddress->getCustomerLastname());
+            $c2pClient->setShipToFirstName($shippingAddress->getFirstname());
+            $c2pClient->setShipToLastName($shippingAddress->getLastname());
             $c2pClient->setShipToAddress($shippingAddress->getStreetLine(1));
             $c2pClient->setShipToZipcode($shippingAddress->getPostcode());
             $c2pClient->setShipToCity($shippingAddress->getCity());
@@ -189,17 +179,12 @@ class Payxpert extends AbstractMethod
         $c2pClient->setCtrlRedirectURL($this->urlBuilder->getUrl('payxpert/checkout/success/'));
         $c2pClient->setCtrlCallbackURL($this->urlBuilder->getUrl('payxpert/checkout/callback/'));
 
-        $md5 = md5($order->getId() . $order->getGrandTotal() . $c2pClient->getPassword());
-
         $c2pClient->setCtrlCustomData($this->checkoutSession->getSessionId());
 
         if ($c2pClient->validate()) {
             if ($c2pClient->preparePayment()) {
-//                $this->logger->cr($c2pClient->getMerchantToken());
-//                $this->logger->debug("Params Success", $params);
 
                 $this->customerSession->setMerchantToken($c2pClient->getMerchantToken());
-                $_SESSION['merchantToken'] = $c2pClient->getMerchantToken();
                 $customerToken = $c2pClient->getCustomerToken();
                 $merchantToken = $c2pClient->getMerchantToken();
 
@@ -215,21 +200,22 @@ class Payxpert extends AbstractMethod
                 try {
                     $variable->save();
                 } catch (\Exception $e) {
-                    throw new \Magento\Framework\Validator\Exception();
+                    $message = $e->getMessage();
+                    $this->logger->debug([$message]);
                 }
 
                 $paymentUrl = $c2pClient->getCustomerRedirectURL();
                 $order->setStatus('pending_payment');
                 $order->save();
             } else {
-                $message = "Preparation error at " . $url2 . " occurred: " .
+                $message = "Preparation error at " . $c2pClient->getURL() . " occurred: " .
                     $this->escaper->escapeHtml($c2pClient->getClientErrorMessage());
+                throw new PaymentException(__($message));
 
-                throw new \Magento\Framework\Validator\Exception(__($message));
             }
         } else {
             $message = "Validation error occurred: " . $this->escaper->escapeHtml($c2pClient->getClientErrorMessage());
-            throw new \Magento\Framework\Validator\Exception(__($message));
+            throw new PaymentException(__($message));
         }
 
         return $paymentUrl;
@@ -245,6 +231,5 @@ class Payxpert extends AbstractMethod
             $url = "https://connect2.payxpert.com";
         }
         return $url;
-//        return preg_replace("(^https?://)", "", $url);
     }
 }

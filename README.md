@@ -7,6 +7,7 @@ The author of this plugin can NEVER be held responsible for this software.
 There is no warranty what so ever. You accept this by using this software.
 
 ## Changelog
+* 1.2.0 - Added payment method selection and online refund. Iframe removed.
 * 1.1.3 - Removed deprecated methods
 * 1.1.2 - Removed PHP version requirement
 * 1.1.1 - PSR-4
@@ -33,7 +34,8 @@ There is no warranty what so ever. You accept this by using this software.
    ```
    php bin/magento module:enable Payxpert_Connect2Pay
    php bin/magento setup:upgrade
-   php bin/magento cache:clean
+   php bin/magento setup:di:compile
+   php bin/magento setup:static-content:deploy 
    ```
 
 4. If Magento® is running in production mode, deploy static content: 

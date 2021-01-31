@@ -1,6 +1,6 @@
 <?php
 /**
- Copyright 2016 PayXpert
+ Copyright 2021 PayXpert
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ use Payxpert\Connect2Pay\Model\Payment\Payxpert as PayxpertModel;
 use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
-use Magento\Framework\Session\SessionManagerInterface;
 
 
 use Magento\Framework\App\Action\Action;
@@ -47,13 +46,14 @@ class Success extends Action
     /**
      * Success constructor.
      *
-     * @param Context         $context
-     * @param Session         $checkoutSession
+     * @param VariableFactory $_variable
+     * @param Context $context
+     * @param Session $checkoutSession
      * @param CustomerSession $customerSession
-     * @param PaymentHelper   $paymentHelper
-     * @param PayxpertModel   $payxpertModel
-     * @param PayxpertHelper  $payxpertHelper
-     * @param Order           $order
+     * @param PaymentHelper $paymentHelper
+     * @param PayxpertModel $payxpertModel
+     * @param PayxpertHelper $payxpertHelper
+     * @param Order $order
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -97,9 +97,7 @@ class Success extends Action
         if ($merchantToken != null) {
             // Extract data received from the payment page
             $data = $params["data"];
-            $this->logger->debug("Success 2nd");
             if ($data != null) {
-                $this->logger->debug("Success 3rd");
 
                 // Setup the client and decrypt the redirect Status
                 $c2pClient = new Connect2PayClient(
@@ -108,7 +106,6 @@ class Success extends Action
                     $this->payxpertHelper->getConfig('payment/Payxpert/password')
                 );
                 if ($c2pClient->handleRedirectStatus($data, $merchantToken)) {
-                    $this->logger->debug("Success 4th");
 
                     // Get the Error code
                     $status = $c2pClient->getStatus();
@@ -121,20 +118,14 @@ class Success extends Action
                     $session = $this->checkoutSession;
                     $this->logger->debug("Session ID: ". $session->getSessionId());
 
-
                     $session->setQuoteId($orderId);
                     $session->getQuote()->setIsActive(false)->save();
+
                     // errorCode = 000 => payment is successful
                     if ($errorCode == '000') {
                         $this->logger->debug("Success 5th");
 
                         // Display the payment confirmation page
-
-//                        $order = $this->order->load($orderId);
-
-//                        $this->checkoutSession->setLastSuccessQuoteId($order->getQouteId());
-//                        $this->checkoutSession->setLastQuoteId($order->getQouteId());
-//                        $this->checkoutSession->setLastOrderId($order->getEntityId());
                         $this->checkoutSession->start();
 
                         $this->_redirect('checkout/onepage/success?utm_nooverride=1');

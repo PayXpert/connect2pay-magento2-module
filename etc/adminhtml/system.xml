@@ -25,22 +25,6 @@
                 <field id="api_url" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="70" translate="label" type="text">
                     <label>API URL</label>
                 </field>
-                <field id="iframe" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="80" translate="label" type="select">
-                    <label>Iframe mode</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="seamless_payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="81" translate="label" type="select">
-                    <label>Seamless payment</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-<!--                <field id="todito_cash" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="82" translate="label" type="select">-->
-<!--                    <label>ToditoCash</label>-->
-<!--                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-<!--                </field>-->
-<!--                <field id="bank_transfer" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="83" translate="label" type="select">-->
-<!--                    <label>BankTransfer</label>-->
-<!--                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-<!--                </field>-->
                 <field id="giropay" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="84" translate="label" type="select">
                     <label>Bank Transfer via Giropay</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -49,10 +33,6 @@
                     <label>WeChat Pay</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-<!--                <field id="line" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="86" translate="label" type="select">-->
-<!--                    <label>Line</label>-->
-<!--                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-<!--                </field>-->
                 <field id="ideal" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="86" translate="label" type="select">
                     <label>Bank Transfer via iDeal</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

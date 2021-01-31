@@ -5,7 +5,7 @@
     "payxpert/connect2pay": "*"
   },
   "type": "magento2-module",
-  "version": "dev",
+  "version": "1.2.0",
   "license": [
     "Apache-2.0"
   ],

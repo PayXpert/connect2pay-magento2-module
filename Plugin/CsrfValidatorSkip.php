@@ -2,19 +2,24 @@
 
 namespace Payxpert\Connect2Pay\Plugin;
 
+use Closure;
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\Request\CsrfValidator;
+use Magento\Framework\App\RequestInterface;
+
 class CsrfValidatorSkip
 {
     /**
-     * @param \Magento\Framework\App\Request\CsrfValidator $subject
-     * @param \Closure $proceed
-     * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Framework\App\ActionInterface $action
+     * @param CsrfValidator $subject
+     * @param Closure $proceed
+     * @param RequestInterface $request
+     * @param ActionInterface $action
      */
     public function aroundValidate(
         $subject,
-        \Closure $proceed,
-        $request,
-        $action
+        Closure $proceed,
+        RequestInterface $request,
+        ActionInterface $action
     ) {
         if ($request->getModuleName() == 'payxpert') {
             return; // Skip CSRF check

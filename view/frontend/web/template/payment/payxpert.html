@@ -40,17 +40,6 @@
             <label class="drinkcard-cc" for="weChat" data-bind="text: $t('Pay by WeChat'), visible: weChat, style: { backgroundImage: 'url(\'' + weChatImageUrl + '\')' }">
             </label>
 
-
-
-
-
-
-
-
-
-
-
-            <div data-bind="text: isCheckedPaymentMethod"></div>
         </div>
         <style>
             .cc-selector input{
@@ -63,7 +52,6 @@
             .cc-selector input:active +.drinkcard-cc{opacity: .9;}
             .cc-selector input:checked +.drinkcard-cc{
                 -webkit-filter: none;
-                -moz-filter: none;
                 filter: none;
                 border-color: darkseagreen;
             }
@@ -82,18 +70,12 @@
                 -webkit-transition: all 100ms ease-in;
                 -moz-transition: all 100ms ease-in;
                 transition: all 100ms ease-in;
-                /*-webkit-filter: brightness(1.8) grayscale(1) opacity(.7);*/
-                /*-moz-filter: brightness(1.8) grayscale(1) opacity(.7);*/
-                /*filter: brightness(1.8) grayscale(1) opacity(.7);*/
-                /* padding: 0; */
+
                 background-origin: content-box;
                 background-color: whitesmoke;
             }
             .drinkcard-cc:hover{
                 border-color: cadetblue;
-                /*-webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);*/
-                /*-moz-filter: brightness(1.2) grayscale(.5) opacity(.9);*/
-                /*filter: brightness(1.2) grayscale(.5) opacity(.9);*/
             }
         </style>
         <div class="payment-method-billing-address">

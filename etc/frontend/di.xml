@@ -10,7 +10,7 @@
             </argument>
         </arguments>
     </type>
-    <type name="Payxpert\Connect2Pay\Model\Payment\Payxpert">
+    <type name="Payxpert\Connect2Pay\Controller\Redirect\Payxpert">
         <arguments>
             <argument name="bankTransferPaymentNetworks" xsi:type="array">
                 <item name="sofort" xsi:type="string">sofort</item>

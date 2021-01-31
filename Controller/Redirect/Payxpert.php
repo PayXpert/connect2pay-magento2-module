@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 PayXpert
+ * Copyright 2021 PayXpert
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ namespace Payxpert\Connect2Pay\Controller\Redirect;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Message\ManagerInterface;
 use Psr\Log\LoggerInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Framework\App\RequestInterface;
@@ -26,11 +29,11 @@ use Magento\Framework\App\RequestInterface;
 class Payxpert extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var \Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     protected $messageManager;
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $_checkoutSession;
     /**
@@ -42,22 +45,31 @@ class Payxpert extends \Magento\Framework\App\Action\Action
      */
     protected $_data;
     protected $_request;
+    protected $_bankTransferPaymentNetworks;
+    /**
+     * @var PaymentHelper
+     */
+    private $_paymentHelper;
 
     /**
      * Redirect construtor
      *
+     * @param RequestInterface $request
      * @param Context $context
      * @param Session $checkoutSession
      * @param LoggerInterface $logger
      * @param PaymentHelper $paymentHelper
+     * @param array $bankTransferPaymentNetworks
      */
     public function __construct(
         RequestInterface $request,
         Context $context,
         Session $checkoutSession,
         LoggerInterface $logger,
-        PaymentHelper $paymentHelper
+        PaymentHelper $paymentHelper,
+        array $bankTransferPaymentNetworks = []
     ) {
+        $this->_bankTransferPaymentNetworks = $bankTransferPaymentNetworks;
         $this->_request = $request;
         $this->_checkoutSession = $checkoutSession;
         $this->_logger = $logger;
@@ -65,11 +77,14 @@ class Payxpert extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    /**
+     * @return ResponseInterface|ResultInterface|void
+     */
     public function execute()
     {
         try {
             $order = $this->_getCheckoutSession()->getLastRealOrder();
-
+            $methodInstance = (object) [];
             if ($order) {
                 $method = $order->getPayment()->getMethod();
                 $methodInstance = $this->_paymentHelper->getMethodInstance($method);
@@ -77,31 +92,38 @@ class Payxpert extends \Magento\Framework\App\Action\Action
 
             if ($methodInstance instanceof \Payxpert\Connect2Pay\Model\Payment\Payxpert) {
                 $params = $this->_request->getParams();
-                $bankTransferPaymentNetworks = ['sofort', 'przelewy24', 'ideal', 'giropay', 'eps', 'poli', 'dragonpay'];
-                $this->_logger->debug('Url Params', $params);
+
+                // Getting array from @file fontend/di.xml
+                $bankTransferPaymentNetworksDi = $this->_bankTransferPaymentNetworks;
+
                 $paymentMethod = $params['paymentMethod'];
+                $paymentNetwork = '';
 
-
-                foreach ($bankTransferPaymentNetworks as $paymentNetwork) {
+                foreach ($bankTransferPaymentNetworksDi as $paymentNetwork) {
                     if ($paymentMethod == $paymentNetwork) {
                         $paymentMethod = 'BankTransfer';
                         break;
-                    }
-                    else {
-                        $paymentNetwork = FALSE;
+                    } else {
+                        $paymentNetwork = false;
                     }
                 }
-                $this->_logger->debug('Payments',[$paymentMethod, $paymentNetwork]);
+                
                 $storeId = $order->getStoreId();
-
-                $redirectUrl = $methodInstance->startTransaction($order, $paymentMethod, $paymentNetwork);
+                $this->_logger->debug("Payments", [$paymentMethod, $paymentNetwork]);
+                try {
+                    $redirectUrl = $methodInstance->startTransaction($order, $paymentMethod, $paymentNetwork);
+                } catch (\Exception $exception) {
+                    throw new \Magento\Framework\Validator\Exception(
+                        __('Payment network is not set. Probably dependency injection not compiled')
+                    );
+                }
                 $this->_redirect($redirectUrl);
 
             } else {
                 throw new \Magento\Framework\Validator\Exception(__('Method is not PayXpert'));
             }
         } catch (\Exception $e) {
-            $this->messageManager->addException($e, __($e->getMessage()));
+            $this->messageManager->addExceptionMessage($e, __($e->getMessage()));
             $this->_logger->critical($e);
             $this->_getCheckoutSession()->restoreQuote();
             $this->_redirect('checkout/cart');
@@ -111,7 +133,7 @@ class Payxpert extends \Magento\Framework\App\Action\Action
     /**
      * Return checkout session object
      *
-     * @return \Magento\Checkout\Model\Session
+     * @return Session
      */
     protected function _getCheckoutSession()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016 PayXpert
+ * Copyright 2021 PayXpert
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ use Payxpert\Connect2Pay\Helper\Data as PayxpertHelper;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 
 use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\App\Action\Action;
@@ -44,6 +45,7 @@ class Callback extends Action
     protected $invoiceSender;
     protected $logger;
     protected $resultFactory;
+    private $_remoteAddress;
 
     /**
      * Callback constructor.
@@ -57,6 +59,7 @@ class Callback extends Action
      * @param Order $order
      * @param InvoiceSender $invoiceSender
      * @param LoggerInterface $logger
+     * @param RemoteAddress $remoteAddress
      */
     public function __construct(
         Context $context,
@@ -67,8 +70,10 @@ class Callback extends Action
         PayxpertHelper $payxpertHelper,
         Order $order,
         InvoiceSender $invoiceSender,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        RemoteAddress $remoteAddress
     ) {
+        $this->_remoteAddress = $remoteAddress;
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
         $this->paymentHelper = $paymentHelper;
@@ -96,44 +101,32 @@ class Callback extends Action
         );
 
         if ($c2pClient->handleCallbackStatus()) {
-            $this->logger->debug("HandleCallbackAfter7");
 
             // Get the Error code
             $status = $c2pClient->getStatus();
             $merchantToken = $status->getMerchantToken();
-            $this->logger->debug("Merchant Token2 " . $merchantToken);
 
-//            $this->customerSession->setMerchatTokenInSession($merchantToken);
             $paymentStatus = $c2pClient->getPaymentStatus($merchantToken);
-            $this->logger->debug("Payment status23: ");
 
             $errorCode = $status->getErrorCode();
-            $this->logger->debug("Error Code1: " . $errorCode);
 
-            // Custom data that could have been provided in ctrlCustomData when creating
-            $customData = $status->getCtrlCustomData();
-            $this->logger->debug("Session Custom Data1: " . $customData);
-
-            $transaction = $paymentStatus->getLastTransactionAttempt();
-            $this->logger->debug("Transaction in Callback ");
+            $transaction = $paymentStatus->getLastInitialTransactionAttempt();
 
             $currency = $status->getCurrency();
 
             $amount = $status->getAmount() / 100;
 
             $orderId = $status->getOrderID();
-            $this->logger->debug("OrderID : ". $orderId);
 
             $order = $this->order->load($orderId);
 
-            if (true) {
-                $this->logger->debug("Session Custom Data2: " . $customData);
+            if ($merchantToken) {
 
                 if ($order != null) {
                     $this->logger->debug("OrderID: " . $orderId);
 
                     $log = "Received a new transaction status from " .
-                        $_SERVER["REMOTE_ADDR"] .
+                        $this->_remoteAddress->getRemoteAddress() .
                         ". Merchant token: " . $merchantToken .
                         ", Status: " . $status->getStatus() .
                         ", Error code: " . $errorCode;
@@ -146,7 +139,6 @@ class Callback extends Action
                     $this->logger->notice($log);
 
                     if ($errorCode == '000') {
-                        $this->logger->debug("Error code: " . $errorCode);
 
                         $orderStatus = $order::STATE_COMPLETE;
                         $payment = $order->getPayment();
@@ -158,7 +150,7 @@ class Callback extends Action
                             ->setStatus($orderStatus)
                             ->registerCaptureNotification($amount, true);
                         $order->setState($orderStatus);
-                        $order->addStatusHistoryComment($log, $orderStatus);
+                        $order->addCommentToStatusHistory($log, $orderStatus);
                         $order->save();
 
                         $invoice = $payment->getCreatedInvoice();
@@ -180,17 +172,19 @@ class Callback extends Action
                 } else {
                     $this->logger->critical(
                         "Error. No order found for token " . $merchantToken . " in callback from " .
-                        $_SERVER["REMOTE_ADDR"] . "."
+                        $this->_remoteAddress->getRemoteAddress() . "."
                     );
                 }
             } else {
                 $this->logger->critical(
-                    "Error. invalid token " . $merchantToken . " in callback from " . $_SERVER["REMOTE_ADDR"] . "."
+                    "Error. invalid token " . $merchantToken . " in callback from " .
+                    $this->_remoteAddress->getRemoteAddress() . "."
                 );
             }
 
         } else {
-            $this->logger->critical("Error. Received an incorrect status from " . $_SERVER["REMOTE_ADDR"] . ".");
+            $this->logger->critical("Error. Received an incorrect status from " .
+                $this->_remoteAddress->getRemoteAddress() . ".");
         }
     }
 }
