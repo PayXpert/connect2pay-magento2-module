@@ -56,6 +56,7 @@ class ConfigGateway implements ConfigProviderInterface
      */
     public function getConfig(): array
     {
+        // Admin settings
         $active          = $this->_config->getValue('payment/payxpert/active', ScopeInterface::SCOPE_STORE);
         $originatorId    = $this->_config->getValue('payment/payxpert/originator', ScopeInterface::SCOPE_STORE);
         $password        = $this->_config->getValue('payment/payxpert/password', ScopeInterface::SCOPE_STORE);
@@ -67,7 +68,9 @@ class ConfigGateway implements ConfigProviderInterface
         $sofort          = $this->_config->getValue('payment/payxpert/sofort', ScopeInterface::SCOPE_STORE);
         $aliPay          = $this->_config->getValue('payment/payxpert/alipay', ScopeInterface::SCOPE_STORE);
         $przelewy24      = $this->_config->getValue('payment/payxpert/przelewy24', ScopeInterface::SCOPE_STORE);
+        $creditCard      = $this->_config->getValue('payment/payxpert/creditcard', ScopeInterface::SCOPE_STORE);
 
+        // Images
         $aliPayImageUrl        = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/alipay.png");
         $weChatImageUrl        = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/wechat.png");
         $creditCardPayImageUrl = $this->_assetRepo->getUrl("Payxpert_Connect2Pay::images/creditcard.png");
@@ -93,6 +96,7 @@ class ConfigGateway implements ConfigProviderInterface
                     'weChat'          => $weChat,
                     'przelewy24'      => $przelewy24,
                     'alipay'          => $aliPay,
+                    'creditcard'      => $creditCard,
 
                     'aliPayImageUrl'     => $aliPayImageUrl,
                     'weChatImageUrl'     => $weChatImageUrl,

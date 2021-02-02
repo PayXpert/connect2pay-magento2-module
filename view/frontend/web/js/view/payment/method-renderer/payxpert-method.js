@@ -12,10 +12,11 @@ define(
             redirectAfterPlaceOrder: false,
             defaults: {
                 template: 'Payxpert_Connect2Pay/payment/payxpert',
+
                 alipay: Boolean(parseInt(window.checkoutConfig.payment.payxpert.alipay)),
                 aliPayImageUrl: window.checkoutConfig.payment.payxpert.aliPayImageUrl,
 
-                creditCard: true,
+                creditcard: Boolean(parseInt(window.checkoutConfig.payment.payxpert.creditcard)),
                 creditCardPayImageUrl: window.checkoutConfig.payment.payxpert.creditCardPayImageUrl,
 
                 weChat: Boolean(parseInt(window.checkoutConfig.payment.payxpert.weChat)),

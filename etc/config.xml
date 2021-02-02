@@ -6,7 +6,7 @@
             <payxpert>
                 <title>Payment with PayXpert</title>
                 <active>1</active>
-                <seamless_payment>0</seamless_payment>
+                <creditcard>1</creditcard>
                 <przelewy24>0</przelewy24>
                 <ideal>0</ideal>
                 <wechat>0</wechat>

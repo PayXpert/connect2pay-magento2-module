@@ -11,8 +11,8 @@
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
         <div class="cc-selector">
-            <input id="creditCard" type="radio" value="CreditCard" data-bind="visible: creditCard, enable: creditCard, checked: isCheckedPaymentMethod" />
-            <label class="drinkcard-cc" for="creditCard" data-bind="text: $t('Pay by CreditCard'), visible: creditCard, style: { backgroundImage: 'url(\'' + creditCardPayImageUrl + '\')' }">
+            <input id="creditcard" type="radio" value="CreditCard" data-bind="visible: creditcard, enable: creditcard, checked: isCheckedPaymentMethod" />
+            <label class="drinkcard-cc" for="creditcard" data-bind="text: $t('Pay by CreditCard'), visible: creditcard, style: { backgroundImage: 'url(\'' + creditCardPayImageUrl + '\')' }">
             </label>
 
             <input id="sofort" type="radio" value="sofort" data-bind="visible: sofort, enable: sofort, checked: isCheckedPaymentMethod" />
@@ -31,8 +31,8 @@
             <label class="drinkcard-cc" for="giropay" data-bind="text: $t('Pay by Bank Transfer via Giropay'), visible: giropay, style: { backgroundImage: 'url(\'' + giroPayImageUrl + '\')' }">
             </label>
 
-            <input id="aliPay" type="radio" value="Alipay" data-bind="visible: aliPay, enable: aliPay, checked: isCheckedPaymentMethod"  />
-            <label class="drinkcard-cc" for="aliPay" data-bind="text: $t('Pay by AliPay'), visible: aliPay, style: { backgroundImage: 'url(\'' + aliPayImageUrl + '\')' }">
+            <input id="alipay" type="radio" value="Alipay" data-bind="visible: alipay, enable: alipay, checked: isCheckedPaymentMethod"  />
+            <label class="drinkcard-cc" for="alipay" data-bind="text: $t('Pay by AliPay'), visible: alipay, style: { backgroundImage: 'url(\'' + aliPayImageUrl + '\')' }">
 
             </label>
 

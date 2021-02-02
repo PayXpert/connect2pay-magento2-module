@@ -25,6 +25,10 @@
                 <field id="api_url" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="70" translate="label" type="text">
                     <label>API URL</label>
                 </field>
+                <field id="creditcard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="84" translate="label" type="select">
+                    <label>Credit Card Pay</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="giropay" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="84" translate="label" type="select">
                     <label>Bank Transfer via Giropay</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -45,11 +49,11 @@
                     <label>Bank Transfer via Przelewy24</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="sofort" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="88" translate="label" type="select">
+                <field id="sofort" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="89" translate="label" type="select">
                     <label>Bank Transfer via Sofort</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="90" translate="label" type="text">
+                <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="91" translate="label" type="text">
                     <label>Sort Order</label>
                 </field>
             </group>

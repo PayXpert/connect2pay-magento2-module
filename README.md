@@ -7,6 +7,7 @@ The author of this plugin can NEVER be held responsible for this software.
 There is no warranty what so ever. You accept this by using this software.
 
 ## Changelog
+* 1.2.1 - Alipay disable fix. Credit Card configuration added.
 * 1.2.0 - Added payment method selection and online refund. Iframe removed.
 * 1.1.3 - Removed deprecated methods
 * 1.1.2 - Removed PHP version requirement
