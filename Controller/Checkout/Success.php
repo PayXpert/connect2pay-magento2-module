@@ -112,7 +112,10 @@ class Success extends Action
 
                     $errorCode = $status->getErrorCode();
                     $sessionId = $status->getCtrlCustomData();
+
+                    $this->checkoutSession->destroy();
                     $this->checkoutSession->setSessionId($sessionId);
+
                     $orderId = $status->getOrderID();
 
                     $session = $this->checkoutSession;
